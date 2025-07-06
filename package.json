@@ -1,0 +1,14 @@
+{
+  "name": "flatmate-os",
+  "version": "1.0.0",
+  "description": "App to help flatmates",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kevin",
+  "license": "ISC"
+}
