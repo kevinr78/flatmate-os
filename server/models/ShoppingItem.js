@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const shoppingItemSchema = new mongoose.Schema({
   name: String,
@@ -8,4 +8,4 @@ const shoppingItemSchema = new mongoose.Schema({
   group: { type: mongoose.Schema.Types.ObjectId, ref: "RoommateGroup" },
 });
 
-module.exports = mongoose.model("ShoppingItem", shoppingItemSchema);
+export default mongoose.model("ShoppingItem", shoppingItemSchema);

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const pollSchema = new mongoose.Schema(
   {
@@ -15,5 +15,4 @@ const pollSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-module.exports = mongoose.model("Poll", pollSchema);
+export default mongoose.model("Poll", pollSchema);

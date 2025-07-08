@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-
+import mongoose from "mongoose";
 const reminderSchema = new mongoose.Schema({
   title: String,
   time: Date,
@@ -9,4 +8,4 @@ const reminderSchema = new mongoose.Schema({
   group: { type: mongoose.Schema.Types.ObjectId, ref: "RoommateGroup" },
 });
 
-module.exports = mongoose.model("Reminder", reminderSchema);
+export default mongoose.model("Reminder", reminderSchema);

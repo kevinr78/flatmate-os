@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-
+import mongoose from "mongoose";
 const choreSchema = new mongoose.Schema({
   task: String,
   assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
@@ -9,4 +8,4 @@ const choreSchema = new mongoose.Schema({
   group: { type: mongoose.Schema.Types.ObjectId, ref: "RoommateGroup" },
 });
 
-module.exports = mongoose.model("Chore", choreSchema);
+export default mongoose.model("Chore", choreSchema);
