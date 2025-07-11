@@ -1,26 +1,28 @@
 import House from "../../models/House.js";
 import User from "../../models/User.js";
 import CustomError from "../../utils/customError.js";
+import { checkIfUserExists } from "../../utils/services.js";
 
 const createHouse = async (req, res) => {
   try {
-    const { name, createdBy, inviteList } = req.body;
-    const parsedInviteList = inviteList ? JSON.parse(inviteList) : [];
-    if (!name || !createdBy) {
+    const { name, inviteList } = req.body;
+    console.log("Creating house with data:", req.body);
+    const parsedInviteList = inviteList ? inviteList.split(",") : [];
+    if (!name) {
       throw new CustomError("Name and createdBy are required", 400);
     }
 
     if (await House.exists({ name })) {
       throw new CustomError("Group with this name already exists", 400);
     }
-    const user = await User.findById(createdBy);
+    const user = await checkIfUserExists({ _id: req.user._id });
     if (!user) {
       throw new CustomError("User not found", 404);
     }
 
     const newGroup = new House({
       name,
-      createdBy,
+      createdBy: req.user._id,
       members: [{ user: req.user._id, role: "admin" }],
       invites: parsedInviteList
         ? parsedInviteList.map((email) => ({
@@ -35,8 +37,9 @@ const createHouse = async (req, res) => {
 
     const savedGroup = await newGroup.save();
     res.status(201).json({
+      success: true,
       message: "House created successfully",
-      group: savedGroup,
+      data: { house: savedGroup },
     });
   } catch (error) {
     console.error("Error creating house:", error);
@@ -69,7 +72,7 @@ const joinHouse = async (req, res) => {
       throw new CustomError("Group ID and User ID are required", 400);
     }
 
-    const user = await User.findById(userId);
+    const user = await checkIfUserExists({ _id: userId });
     if (!user) {
       throw new CustomError("User not found", 404);
     }
@@ -145,4 +148,32 @@ const getHouseDetails = async (req, res) => {
   }
 };
 
-export { createHouse, deleteHouse, joinHouse, inviteToHouse, getHouseDetails };
+const getUserHouseDetails = async (req, res) => {
+  try {
+    console.log(req.user);
+    const userId = req.user._id;
+    const user = await User.findById(userId).populate("group");
+    if (!user || !user.group) {
+      throw new CustomError("User or group not found", 404);
+    }
+    res.status(200).json({
+      success: true,
+      message: "User house details retrieved successfully",
+      data: {
+        house: user.group,
+      },
+    });
+  } catch (error) {
+    console.error("Error getting user house details:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export {
+  createHouse,
+  deleteHouse,
+  joinHouse,
+  inviteToHouse,
+  getHouseDetails,
+  getUserHouseDetails,
+};

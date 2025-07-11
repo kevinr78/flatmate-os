@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema(
     password: String,
     group: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "RoommateGroup",
+      ref: "House",
       default: null,
     },
   },
